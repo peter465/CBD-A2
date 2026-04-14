@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0  # Required for SonarQube
     
@@ -28,7 +28,8 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     
-    
+    - name: Build and run tests
+      run: mvn clean verify
     
     # Generate coverage report
     - name: Generate Coverage Report
@@ -36,10 +37,10 @@ jobs:
     
     # SonarQube Code Analysis with Quality Gate
     - name: SonarQube Scan
-      run: mvn sonar:sonar -Dsonar.qualitygate.wait=true
+      uses: SonarSource/sonarqube-scan-action@v4
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     # Package and Deploy
     - name: Package JAR
       run: mvn package -DskipTests
