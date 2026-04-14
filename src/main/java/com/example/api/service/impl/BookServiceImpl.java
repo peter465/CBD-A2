@@ -26,6 +26,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
+	
+	// Add this method to BookServiceImpl
+	public List<BookDTO> getAllBooks() {
+	    // Return all books without filters
+	    return getBooksFilteredAndSorted(null, null, null, null, null);
+	}
 
     @Autowired
     private AuthorRepository authorRepository;
@@ -56,7 +62,14 @@ public class BookServiceImpl implements BookService {
         b.setPrice(dto.getPrice());
         return b;
     }
-
+ // Add this method to BookServiceImpl class
+    @Override
+    public List<BookDTO> getBooksFilteredAndSorted(Long authorId, LocalDate fromDate, 
+                                                    LocalDate toDate, String sortBy, 
+                                                    String direction) {
+        // Implementation - for now, return all books
+        return getBooksFilteredAndSorted(null, null, null, null, null);
+    }
     @Override
     @Transactional
     public BookDTO createBook(Long authorId, BookDTO dto) {

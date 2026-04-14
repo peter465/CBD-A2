@@ -1,0 +1,8 @@
+com\example\api\controller\A5Test.class
+com\example\api\RestApiApplicationTests.class
+com\example\api\controller\A1Test.class
+com\example\api\controller\AuthorControllerTest.class
+com\example\api\controller\BookControllerTest.class
+com\example\api\repository\BookRepositoryTest.class
+com\example\api\service\impl\BookServiceTest.class
+com\example\api\controller\A2Test.class

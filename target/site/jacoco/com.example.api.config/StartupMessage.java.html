@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StartupMessage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">rest-api</a> &gt; <a href="index.source.html" class="el_package">com.example.api.config</a> &gt; <span class="el_source">StartupMessage.java</span></div><h1>StartupMessage.java</h1><pre class="source lang-java linenums">package com.example.api.config;
+
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StartupMessage implements ApplicationRunner {
+    
+    private final Environment environment;
+
+<span class="fc" id="L13">    public StartupMessage(Environment environment) {</span>
+<span class="fc" id="L14">        this.environment = environment;</span>
+<span class="fc" id="L15">    }</span>
+
+    @Override
+    public void run(ApplicationArguments args) {
+<span class="fc" id="L19">        String port = environment.getProperty(&quot;server.port&quot;, &quot;8080&quot;);</span>
+<span class="fc" id="L20">        String contextPath = environment.getProperty(&quot;server.servlet.context-path&quot;, &quot;&quot;);</span>
+<span class="fc" id="L21">        String activeProfile = String.join(&quot;, &quot;, environment.getActiveProfiles());</span>
+        
+<span class="fc" id="L23">        System.out.println(&quot;\n&quot; +</span>
+            &quot;╔══════════════════════════════════════════════════════════╗\n&quot; +
+            &quot;║                                                          ║\n&quot; +
+            &quot;║     🚀  BOOKS API STARTED SUCCESSFULLY!                 ║\n&quot; +
+            &quot;║                                                          ║\n&quot; +
+            &quot;╠══════════════════════════════════════════════════════════╣\n&quot; +
+            &quot;║                                                          ║\n&quot; +
+            &quot;║  📍  Base URL: http://localhost:&quot; + port + contextPath + &quot;            ║\n&quot; +
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">            &quot;║  🔧  Profile: &quot; + (activeProfile.isEmpty() ? &quot;default&quot; : activeProfile) + &quot;\n&quot; +</span>
+            &quot;║  📊  Status: RUNNING                                     ║\n&quot; +
+            &quot;║                                                          ║\n&quot; +
+            &quot;║  📚  Available Endpoints:                                ║\n&quot; +
+            &quot;║  ────────────────────────────────────────────────────── ║\n&quot; +
+            &quot;║  POST   /authors/{authorId}/books     - Create book     ║\n&quot; +
+            &quot;║  GET    /authors/{authorId}/books     - List books      ║\n&quot; +
+            &quot;║  GET    /authors/{authorId}/books/{id} - Get book       ║\n&quot; +
+            &quot;║  PUT    /authors/{authorId}/books/{id} - Update book    ║\n&quot; +
+            &quot;║  DELETE /authors/{authorId}/books/{id} - Delete book    ║\n&quot; +
+            &quot;║  Get api/books                         -get all books   ║\n&quot; +
+            &quot;╚═════════════════════════════════════════════════════════╝\n&quot;);
+<span class="fc" id="L43">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
