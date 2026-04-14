@@ -33,12 +33,11 @@ jobs:
       run: mvn jacoco:report
     
     # SonarQube Code Analysis with Quality Gate
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v6
+   - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v4
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        
-       with:
+      with:
         args: >
           -Dsonar.projectKey=peter465_CBD-A2
           -Dsonar.organization=peter465
