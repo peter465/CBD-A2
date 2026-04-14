@@ -1,4 +1,4 @@
-name: CI/CD Pipeline with Code Analysis
+name: CI/CD Pipeline
 
 on:
   push:
@@ -11,29 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Required for SonarQube
+        fetch-depth: 0
     
     - name: Set up JDK 21
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
     
-    - name: Cache Maven dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-      
-    # Generate coverage report
-    - name: Generate Coverage Report
-      run: mvn jacoco:report
+    - name: Build and run tests
+      run: mvn clean verify
     
-    # SonarQube Code Analysis with Quality Gate
-   - name: SonarQube Scan
+    - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v4
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -46,22 +38,3 @@ jobs:
           -Dsonar.tests=src/test/java
           -Dsonar.java.binaries=target/classes
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
- 
-    # Package and Deploy
-    - name: Package JAR
-      run: mvn package -DskipTests
-    
-    - name: Build Docker Image
-      run: docker build -t rest-api:latest .
-    
-    - name: Run Container
-      run: |
-        docker run -d --name rest-api -p 8080:8080 rest-api:latest
-        sleep 10
-    
-    - name: Verify Deployment
-      run: curl -f http://localhost:8080/ || true
-    
-    - name: Quality Gate Status
-      if: failure()
-      run: echo "Quality gate failed - check SonarCloud for details"
