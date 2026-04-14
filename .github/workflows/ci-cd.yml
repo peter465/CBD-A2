@@ -34,6 +34,12 @@ jobs:
     - name: Build with Maven
       run: mvn clean compile
     
+    - name: Debug - List files and Java version
+      run: |
+    java -version
+    mvn -version
+    ls -la src/test/java/
+    cat pom.xml | head -50
     # Run tests (verbose output)
     - name: Run Tests
       run: mvn test -X
