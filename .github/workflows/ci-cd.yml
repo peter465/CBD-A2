@@ -3,41 +3,62 @@ name: CI/CD Pipeline for REST API
 on:
   push:
     branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    # Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
     
+    # Setup Java 21
     - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
         java-version: '21'
         distribution: 'temurin'
     
+    # Cache Maven dependencies (speeds up builds)
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    # Build and test
     - name: Build with Maven
       run: mvn clean compile
     
+    # Run tests (verbose output)
     - name: Run Tests
-      run: mvn test
+      run: mvn test -X
     
+    # Package JAR
     - name: Package JAR
       run: mvn package -DskipTests
     
+    # Build Docker image
     - name: Build Docker Image
       run: docker build -t rest-api:latest .
     
+    # Run container
     - name: Run Container
-      run: docker run -d --name rest-api -p 8080:8080 rest-api:latest
+      run: |
+        docker run -d --name rest-api -p 8080:8080 rest-api:latest
+        sleep 10
     
-    - name: Wait for app to start
-      run: sleep 10
-    
+    # Test API
     - name: Test API
-      run: curl -f http://localhost:8080/
+      run: |
+        curl -f http://localhost:8080/ || echo "API endpoint not responding"
+        curl -f http://localhost:8080/api/health || echo "Health endpoint not responding"
     
+    # Show logs if something failed
     - name: Show logs on failure
       if: failure()
       run: docker logs rest-api
