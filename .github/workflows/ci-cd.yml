@@ -37,7 +37,17 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@v6
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        
+       with:
+        args: >
+          -Dsonar.projectKey=peter465_CBD-A2
+          -Dsonar.organization=peter465
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.sources=src/main/java
+          -Dsonar.tests=src/test/java
+          -Dsonar.java.binaries=target/classes
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+ 
     # Package and Deploy
     - name: Package JAR
       run: mvn package -DskipTests
