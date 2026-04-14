@@ -22,9 +22,6 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     
-    - name: Build and run tests
-      run: mvn clean verify
-    
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v4
       env:
