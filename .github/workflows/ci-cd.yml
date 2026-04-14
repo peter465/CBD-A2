@@ -34,7 +34,7 @@ jobs:
     
     # SonarQube Code Analysis with Quality Gate
     - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v6
+      uses: run: mvn sonar:sonar -Dsonar.qualitygate.wait=true
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

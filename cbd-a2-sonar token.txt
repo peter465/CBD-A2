@@ -1,1 +1,3 @@
 90a138eaa6a67d5a33ff467cedf59f5ff15c078f
+
+ SonarSource/sonarqube-scan-action@v6
