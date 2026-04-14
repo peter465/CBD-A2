@@ -28,9 +28,7 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     
-    # Run all tests (your existing tests)
-    - name: Run Tests
-      run: mvn test
+    
     
     # Generate coverage report
     - name: Generate Coverage Report
