@@ -1,15 +1,19 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with Code Analysis
 
 on:
   push:
     branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  build-and-deploy:
+  build-and-analyze:
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Required for SonarQube
     
     - name: Set up JDK 21
       uses: actions/setup-java@v3
@@ -17,9 +21,28 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     
-    - name: Build with Maven (skip tests)
-      run: mvn clean compile -DskipTests
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
     
+    # Run all tests (your existing tests)
+    - name: Run Tests
+      run: mvn test
+    
+    # Generate coverage report
+    - name: Generate Coverage Report
+      run: mvn jacoco:report
+    
+    # SonarQube Code Analysis with Quality Gate
+    - name: SonarQube Scan
+      run: mvn sonar:sonar -Dsonar.qualitygate.wait=true
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    
+    # Package and Deploy
     - name: Package JAR
       run: mvn package -DskipTests
     
@@ -31,8 +54,9 @@ jobs:
         docker run -d --name rest-api -p 8080:8080 rest-api:latest
         sleep 10
     
-    - name: Verify API
+    - name: Verify Deployment
       run: curl -f http://localhost:8080/ || true
     
-    - name: Show Docker logs
-      run: docker logs rest-api
+    - name: Quality Gate Status
+      if: failure()
+      run: echo "Quality gate failed - check SonarCloud for details"
