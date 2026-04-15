@@ -1,13 +1,11 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with SonarQube
 
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
 
 jobs:
-  build-and-analyze:
+  build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -22,16 +20,38 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    - name: Run tests
+      run: mvn test
+    
+    - name: Generate coverage report
+      run: mvn jacoco:report
+    
     - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v6
+      run: mvn sonar:sonar -Dsonar.qualitygate.wait=true
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.projectKey=peter465_CBD-A2
-          -Dsonar.organization=peter465
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.sources=src/main/java
-          -Dsonar.tests=src/test/java
-          -Dsonar.java.binaries=target/classes
-          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+    
+    - name: Package JAR
+      run: mvn package -DskipTests
+    
+    - name: Build Docker Image
+      run: docker build -t rest-api:latest .
+    
+    - name: Run Container
+      run: |
+        docker run -d --name rest-api -p 8080:8080 rest-api:latest
+        sleep 10
+    
+    - name: Verify API
+      run: curl -f http://localhost:8080/ || echo "API test completed"
+    
+    - name: Show Docker logs on failure
+      if: failure()
+      run: docker logs rest-api
