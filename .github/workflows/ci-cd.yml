@@ -47,7 +47,7 @@ jobs:
       run: |
         docker run -d --name rest-api -p 8080:8080 rest-api:latest
         sleep 10
-    
+    fvvv
     - name: Verify API
       run: curl -f http://localhost:8080/ || echo "API test completed"
     
