@@ -43,7 +43,7 @@ jobs:
     - name: Build Docker Image
       run: docker build -t rest-api:latest .
       
-      vv
+     
     
     - name: Run Container
       run: |
