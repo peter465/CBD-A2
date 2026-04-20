@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthorServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">rest-api</a> &gt; <a href="index.source.html" class="el_package">com.example.api.service.impl</a> &gt; <span class="el_source">AuthorServiceImpl.java</span></div><h1>AuthorServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.api.service.impl;
+
+import com.example.api.dto.AuthorDTO;
+import com.example.api.service.AuthorService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L10">public class AuthorServiceImpl implements AuthorService {</span>
+    
+    // Remove the self-referential field
+    // private AuthorService authorService;  ← DELETE THIS LINE
+    
+    @Override
+    public Page&lt;AuthorDTO&gt; getAllAuthors(Pageable pageable) {
+        // Implementation
+<span class="nc" id="L18">        return null; // Replace with actual implementation</span>
+    }
+    
+    @Override
+    public AuthorDTO getAuthorById(Long id) {
+        // Implementation
+<span class="nc" id="L24">        return null; // Replace with actual implementation</span>
+    }
+    
+    @Override
+    public AuthorDTO createAuthor(AuthorDTO authorDTO) {
+        // Implementation
+<span class="nc" id="L30">        return authorDTO;</span>
+    }
+    
+    @Override
+    public AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO) {
+<span class="nc" id="L35">        authorDTO.setId(id);</span>
+        // Implementation
+<span class="nc" id="L37">        return authorDTO;</span>
+    }
+    
+    @Override
+    public void deleteAuthor(Long id) {
+        // Implementation
+<span class="nc" id="L43">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
